@@ -3,137 +3,105 @@ courses = []
 marks = {}
 
 def input_students():
-    n = int(input("Enter number of students: "))
+    n = int(input("Number of students: "))
     for i in range(n):
-        print("\nStudent {i + 1}: ")
+        print(f"\nStudent {i + 1}:")
         sid = input("ID: ")
-        sname = input("Name: ")
-        sdob = input("DoB: ")
-        students.append((sid, sname, sdob))
+        name = input("Name: ")
+        dob = input("DoB: ")
+        students.append((sid, name, dob))
 
 def input_courses():
-    n = int(input("\nEnter number of courses: "))
+    n = int(input("Number of courses: "))
     for i in range(n):
-        print("\nCourse {i + 1}: ")
+        print(f"\nCourse {i + 1}:")
         cid = input("ID: ")
         cname = input("Name: ")
         courses.append((cid, cname))
 
 def input_marks():
-    if len(courses) <= 0 or len(students) <= 0:
-        print("You must input valid students/courses first")
+    if not students or not courses:
+        print("Add students and courses first!")
         return
 
     print("\nCourses:")
     for i, (cid, cname) in enumerate(courses):
-        print("{i+1}. {cid} - {cname}")
+        print(f"{i+1}. {cid} - {cname}")
 
     try:
-        choice = int(input("Select a course (number): ")) - 1
-        if choice < 0 or choice >= len(courses):
-            print("Invalid course selection.")
-            return
-    except ValueError:
-        print("Invalid input.")
+        choice = int(input("Choose course: ")) - 1
+        cid = courses[choice][0]
+    except:
+        print("Invalid choice.")
         return
 
-    course_id = courses[choice][0]
+    if cid not in marks:
+        marks[cid] = {}
 
-    if course_id not in marks:
-        marks[course_id] = {}
-
-    print("\nEnter marks: ")
-    for sid, sname, sdob in students:
+    print("\nEnter marks:")
+    for sid, name, dob in students:
         while True:
             try:
-                m = float(input("Mark for {sid} - {sname}: "))
+                m = float(input(f"Mark for {sid} - {name}: "))
                 break
-            except ValueError:
-                print("  Please enter a valid number.")
-        marks[course_id][sid] = m
+            except:
+                print(" Enter a number!")
+        marks[cid][sid] = m
 
 def list_students():
-    print("\nStudents: ")
-    if not students:
-        print("No students yet.")
-        return
-    for sid, sname, sdob in students:
-        print("{sid} | {sname} | DoB: {sdob}")
+    print("\nStudents:")
+    for sid, name, dob in students:
+        print(f"{sid} | {name} | DoB: {dob}")
 
 def list_courses():
-    print("\nCourses: ")
-    if not courses:
-        print("No courses yet.")
-        return
+    print("\nCourses:")
     for cid, cname in courses:
-        print("{cid} | {cname}")
+        print(f"{cid} | {cname}")
 
 def show_marks():
-    if len(courses) == 0:
-        print("No courses available.")
-        return
-
-    print("\nCourses: ")
+    print("\nCourses:")
     for i, (cid, cname) in enumerate(courses):
-        print("{i+1}. {cid} - {cname}")
+        print(f"{i+1}. {cid} - {cname}")
 
     try:
-        choice = int(input("Select a course (number): ")) - 1
-        if choice < 0 or choice >= len(courses):
-            print("Invalid course selection.")
-            return
-    except ValueError:
-        print("Invalid input.")
+        choice = int(input("Choose course: ")) - 1
+        cid = courses[choice][0]
+    except:
+        print("Invalid choice.")
         return
 
-    course_id = courses[choice][0]
-
-    print("\nMarks for course {course_id}:")
-    if course_id not in marks:
-        print("No marks entered yet.")
+    print(f"\nMarks for {cid}:")
+    if cid not in marks:
+        print("No marks yet.")
         return
 
-    for sid, sname, sdob in students:
-        if sid in marks[course_id]:
-            print("{sid} - {sname}: {marks[course_id][sid]}")
-        else:
-            print("{sid} - {sname}: No mark")
+    for sid, name, dob in students:
+        mark = marks[cid].get(sid, "No mark")
+        print(f"{sid} - {name}: {mark}")
 
 def main():
     while True:
-        print("\nStudents' mark management: ")
+        print("\nMenu:")
         print("1. Input students")
         print("2. Input courses")
         print("3. List students")
         print("4. List courses")
-        print("5. Input marks for a course")
+        print("5. Input marks")
         print("6. Show marks")
         print("0. Exit")
 
-        print("\nCurrent students:", len(students))
-        print("Current courses:", len(courses))
-        print("Current mark records:", len(marks))
+        choice = input("Choose: ")
 
-        c = input("\nChoose: ").strip()
-
-        if c == "1":
-            input_students()
-        elif c == "2":
-            input_courses()
-        elif c == "3":
-            list_students()
-        elif c == "4":
-            list_courses()
-        elif c == "5":
-            input_marks()
-        elif c == "6":
-            show_marks()
-        elif c == "0":
+        if choice == "1": input_students()
+        elif choice == "2": input_courses()
+        elif choice == "3": list_students()
+        elif choice == "4": list_courses()
+        elif choice == "5": input_marks()
+        elif choice == "6": show_marks()
+        elif choice == "0":
             print("Terminated!")
             break
-        elif c == "":
-            continue
         else:
-            print("Invalid choice")
+            print("Invalid option.")
 
 main()
